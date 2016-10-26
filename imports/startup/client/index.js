@@ -1,0 +1,1 @@
+import './openpay-config';
