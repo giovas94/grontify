@@ -53,6 +53,7 @@ export const insertUsers = new ValidatedMethod({
     }
 
     return future.wait();
+    // return newUser;
   }
 });
 

@@ -11,12 +11,17 @@ const handleLogout = () => {
     offset: 100,
   });
 
+  $zopim(function() {
+    $zopim.livechat.window.hide();
+    $zopim.livechat.endChat();
+  })
+
   Meteor.logout(() => browserHistory.push('/'))
 };
 
 export const Navbar = ({currentRoute, isLoginPage}) => (
   <header className="cd-auto-hide-header">
-  	<div className="logo"><Link to="/"><img height="50px" width="auto" src="http://res.cloudinary.com/grontify/image/upload/v1476989047/logo/grontify-logo-HQ.png" alt="grontify"/></Link></div>
+  	<div className="logo"><Link to="/"><img height="50px" width="auto" src="https://res.cloudinary.com/grontify/image/upload/v1476989047/logo/grontify-logo-HQ.png" alt="grontify"/></Link></div>
 
   	<nav className="cd-primary-nav">
   		<a href="#cd-navigation" className="nav-trigger">
@@ -34,7 +39,7 @@ export const Navbar = ({currentRoute, isLoginPage}) => (
         <li>{!Meteor.userId() ?
           <Link to="/login" activeClassName="active">Inicia Sesión / Regístrate</Link>
         :
-          <a href="#" onClick={handleLogout}>Logout</a>
+          <a href="#" onClick={handleLogout}>Salir</a>
         }</li>
   		</ul>
   	</nav>

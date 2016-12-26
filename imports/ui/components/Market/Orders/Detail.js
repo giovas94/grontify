@@ -30,7 +30,8 @@ export class OrderDetail extends Component {
 
             <div className="prices">
                 <b>Importe</b> <span>{accounting.formatMoney(order.secureSubtotal || order.subtotal)}</span> <br/>
-                <b>Envío</b> <span>{order.shippingType} - {accounting.formatMoney(order.shippingCost)}</span> <br/>
+                <b>Descuento</b> <span>{accounting.formatMoney(order.orderDiscount + order.shippingDiscount || order.orderDiscount)}</span> <br/>
+                <b>Envío</b> <span>{order.shippingType} | {accounting.formatMoney(order.shippingCost)}</span> <br/>
                 <b>Total <span>{accounting.formatMoney(order.total)}</span></b>
             </div>
 

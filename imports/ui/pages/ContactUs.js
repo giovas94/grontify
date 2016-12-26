@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Helmet from 'react-helmet';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router';
 import {Grid, Row, Col} from 'react-bootstrap';
@@ -54,6 +55,13 @@ export class ContactUs extends Component {
   render() {
     return (
       <div style={{paddingLeft: '5%', paddingRight: '5%'}}>
+        <Helmet
+          title="Contáctanos"
+          meta={[
+              {"name": "description", "content": "Contáctanos. Tienes alguna pregunta, duda o sugerencia. Frutas y verduras a domicilio."}
+          ]}
+        />
+
         <h1>Contáctanos</h1>
 
         <Row>
@@ -75,8 +83,12 @@ export class ContactUs extends Component {
             <h3>Datos de contacto</h3>
             <h4>Nuestras Oficinas</h4>
             <p>Zacatecas #8 Interior 10 Col. Roma Norte Del. Cuauhtémoc CP. 06700 <br/>México, México</p>
+            <h4>Teléfono</h4>
+            <p>5264 8901</p>
+            <h4><i className="fa fa-whatsapp"></i> Whatsapp</h4>
+            <p>55 4834 9853</p>
             <h4>Email</h4>
-            <p>info@grontify.com</p>
+            <p>contacto@grontify.com</p>
           </Col>
         </Row>
 

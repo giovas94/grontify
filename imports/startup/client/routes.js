@@ -2,7 +2,7 @@ import React from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
 import App from '../../ui/layouts/App.js';
-import Market from '../../ui/layouts/Market.js';
+// import Market from '../../ui/layouts/Market.js';
 
 import { Home } from '../../ui/pages/Home.js';
 import { NotFound } from '../../ui/pages/NotFound.js';
@@ -12,7 +12,10 @@ import { Login } from '../../ui/pages/Login.js';
 import { RecoverPassword } from '../../ui/pages/RecoverPassword.js';
 import { ResetPassword } from '../../ui/pages/ResetPassword.js';
 import { VerifyEmail } from '../../ui/pages/VerifyEmail.js';
+import { Terms } from '../../ui/pages/Legal/Terms.js';
+import { Privacy } from '../../ui/pages/Legal/Privacy.js';
 
+import MarketContainer from '../../ui/containers/MarketContainer.js';
 import CatalogueContainer from '../../ui/containers/CatalogueContainer.js';
 import ProfileContainer from '../../ui/containers/ProfileContainer.js';
 import AddressesContainer from '../../ui/containers/AddressesContainer.js';
@@ -54,7 +57,7 @@ export const renderRoutes = () => (
       <Route name="reset-password" path="/reset-password/:token" component={ ResetPassword } />
       <Route name="how" path="how-works" component={How} />
       <Route name="contact" path="contact" component={ContactUs} />
-      <Route name="market" path="market" component={Market} onEnter={requireAuth}>
+      <Route name="market" path="market" component={MarketContainer} onEnter={requireAuth}>
         <IndexRoute name="catalogue" component={CatalogueContainer} onEnter={requireAuth} />
         <Route name="profile" path="/profile" component={ProfileContainer} onEnter={requireAuth} />
         <Route name="payment" path="/payment" component={Payment} onEnter={requireAuth} />
@@ -65,6 +68,8 @@ export const renderRoutes = () => (
         <Route name="order" path="/order/:_id" component={OrderDetailContainer} onEnter={requireAuth} />
         <Route name="help" path="/help" component={Help} onEnter={requireAuth} />
       </Route>
+      <Route name="terms" path="/legal/terms" component={Terms} />
+      <Route name="privacy" path="/legal/privacy" component={Privacy} />
     </Route>
     <Route path="*" component={NotFound} />
   </Router>

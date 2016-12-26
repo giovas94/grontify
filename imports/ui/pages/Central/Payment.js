@@ -9,6 +9,9 @@ import {Row, Col} from 'react-bootstrap';
 import { CreditCard } from '../../components/Market/Payment/CreditCard.js';
 import { List } from '../../components/Market/Payment/List.js';
 
+const device_session_id = OpenPay.deviceData.setup();
+console.log(device_session_id);
+
 export class Payment extends Component {
   constructor(props) {
     super(props);
@@ -48,45 +51,55 @@ export class Payment extends Component {
   }
 
   _newCard(card) {
-    Meteor.call('payments.insert', {card}, (err, result) => {
-      if (!err) {
-        Alert.success(`<h4>Tarjeta guardada!</h4>`, {
-          position: 'top-right',
-          effect: 'slide',
-          timeout: 3500,
-          offset: 100,
-          html: true,
-        });
 
-        if (this.props.location.state && this.props.location.state.fromOrder) {
-          browserHistory.push('/market');
-        } else {
-          this.setState({loadingCardsList: !this.state.loadingCardsList});
-          Meteor.call('listCards', (error, response) => {
-            if ( error ) {
-              Alert.error(error.reason, {
-                position: 'top-right',
-                effect: 'slide',
-                timeout: 3500,
-                offset: 100,
-                html: true,
-              });
-            } else {
-              this.setState({cards: response});
-            }
+    OpenPay.token.create(card, (response) => {
+      console.log(response)
+
+      const card_req = {
+        token_id: response.data.id,
+        device_session_id: device_session_id
+      };
+
+      Meteor.call('payments.insert', {card_req}, (err, result) => {
+        if (!err) {
+          Alert.success(`<h4>Tarjeta guardada!</h4>`, {
+            position: 'top-right',
+            effect: 'slide',
+            timeout: 3500,
+            offset: 100,
+            html: true,
+          });
+
+          if (this.props.location.state && this.props.location.state.fromOrder) {
+            browserHistory.push('/market');
+          } else {
             this.setState({loadingCardsList: !this.state.loadingCardsList});
+            Meteor.call('listCards', (error, response) => {
+              if ( error ) {
+                Alert.error(error.reason, {
+                  position: 'top-right',
+                  effect: 'slide',
+                  timeout: 3500,
+                  offset: 100,
+                  html: true,
+                });
+              } else {
+                this.setState({cards: response});
+              }
+              this.setState({loadingCardsList: !this.state.loadingCardsList});
+            });
+          }
+        } else {
+          Alert.error(err.reason, {
+            position: 'top-right',
+            effect: 'slide',
+            timeout: 3500,
+            offset: 100,
+            html: true,
           });
         }
-      } else {
-        Alert.error(err.reason, {
-          position: 'top-right',
-          effect: 'slide',
-          timeout: 3500,
-          offset: 100,
-          html: true,
-        });
-      }
-    })
+      });
+    }, (error) => { console.log(error) });
   }
 
   _deleteCard(cardId) {
@@ -135,7 +148,7 @@ export class Payment extends Component {
       <Row>
         <Col sm={12} md={6}>
           <h3>Agregar método de pago</h3>
-          <p style={{fontSize: 'small'}}>Ingresa los datos exactamente como aparecen en la tarjeta.</p>
+          <p style={{fontSize: 'small'}}>Ingresa los datos exactamente como aparecen en la tarjeta. <br/>Tu tarjeta y pagos son procesados de forma segura por <img src="img/logo_openpay.png" width="55px" alt="Openpay"/> </p>
           <CreditCard newCard={this._newCard.bind(this)} />
         </Col>
 

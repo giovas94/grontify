@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Helmet from 'react-helmet';
 import Alert from 'react-s-alert';
 import { Link } from 'react-router';
 import { Meteor } from 'meteor/meteor';
@@ -18,6 +19,25 @@ export class Login extends Component {
   componentDidMount() {
     $('.message a').click(function(){
        $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
+    });
+  }
+
+  _loginFacebook(event) {
+    event.preventDefault();
+
+    const { location } = this.props;
+
+    Meteor.loginWithFacebook({}, (err) => {
+      if (err) {
+        console.log('errorMessage', err.reason || 'Unknown error');
+      } else {
+        if (location.state && location.state.nextPathname) {
+          browserHistory.push(location.state.nextPathname);
+        } else {
+          browserHistory.push('/market');
+        }
+
+      }
     });
   }
 
@@ -61,6 +81,8 @@ export class Login extends Component {
                 timeout: 3500,
                 offset: 100,
               });
+
+              this.setState({logginIn: false});
             } else {
               Alert.success('Bienvenido de vuelta!', {
                 position: 'top-right',
@@ -85,6 +107,7 @@ export class Login extends Component {
             offset: 100,
             html: true,
           })
+          this.setState({logginIn: false});
         }
       } else {
         Alert.error(err.reason, {
@@ -93,9 +116,9 @@ export class Login extends Component {
           timeout: 3500,
           offset: 100,
         })
+        this.setState({logginIn: false});
       }
     });
-    this.setState({logginIn: !this.state.logginIn});
   }
 
   _handleSignup(event) {
@@ -150,6 +173,7 @@ export class Login extends Component {
               timeout: 3500,
               offset: 100,
             });
+            this.setState({logginIn: false});
           } else {
             Alert.success('Bienvenido!', {
               position: 'top-right',
@@ -173,9 +197,11 @@ export class Login extends Component {
           timeout: 3500,
           offset: 100,
         })
+        this.setState({logginIn: false});
       }
+
+      this.setState({logginIn: false});
     });
-    this.setState({logginIn: !this.state.logginIn});
   }
 
   renderErrors() {
@@ -188,6 +214,13 @@ export class Login extends Component {
     return (
       // <!-- Page Contents-->
       <div>
+        <Helmet
+          title="Login"
+          meta={[
+              {"name": "description", "content": "Ingresa o regístrate para la entrega de frutas y verduras a domicilio"}
+          ]}
+        />
+
         <video autoPlay muted loop poster="Comfy/Snapshots/Comfy.jpg" id="bgvideo">
           <source src="Comfy/WEBM/Comfy.webm"/>
           <source src="Comfy/MP4/Comfy.mp4"/>
@@ -200,6 +233,12 @@ export class Login extends Component {
         </div>
         <div className="form">
           <div className="thumbnail"><img src="https://res.cloudinary.com/grontify/image/upload/v1476989047/logo/grontify-logo-HQ.png"/></div>
+          <div>
+            <a className="btn btn-block btn-social btn-facebook" onClick={this._loginFacebook.bind(this)}>
+              <span className="fa fa-facebook"></span> Ingresa con facebook
+            </a>
+          </div>
+          <div style={{marginTop: '1rem'}}>o</div>
           <form className="register-form" onSubmit={this._handleSignup.bind(this)}>
             <input type="text" ref="name" placeholder="Nombre(s)"/>
             <input type="text" ref="last_name" placeholder="Apellido(s)"/>

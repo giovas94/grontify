@@ -11,3 +11,5 @@ import '../../api/orders/server/publications.js';
 import '../../api/products/server/publications.js';
 
 import '../../api/contactMessages/methods.js';
+
+import '../../api/shippingTypes/server/publications.js';

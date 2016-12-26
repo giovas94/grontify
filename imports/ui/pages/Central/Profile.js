@@ -98,12 +98,22 @@ export class Profile extends Component {
           });
         }
       });
+    } else {
+      Alert.error('Deben ser 10 dígitos!', {
+        position: 'top-right',
+        effect: 'slide',
+        timeout: 3500,
+        offset: 100,
+      });
     }
 
     this.setState({editMode: !this.state.editMode});
   }
 
   render() {
+    const tooltip = (
+      <Tooltip id="tooltip">Te enviaremos un mensaje cuando tu mandado este llegando!</Tooltip>
+    );
     const {currentUser} = this.props;
     return (
       <div>
@@ -116,18 +126,18 @@ export class Profile extends Component {
           <Row>
             <Col xs={12} md={6}>
               <h3>Mi Perfil</h3>
-              <div>
-                <strong>Nombre(s)</strong> {currentUser.profile.name} <strong>Apellido(s)</strong> {currentUser.profile.last_name}
+              <div className="profile">
+                <b>Nombre</b> {currentUser.profile.name} {!currentUser.emails ? '' : <b>Apellido(s)</b>} {currentUser.profile.last_name}
                 <br/>
-                <strong>Email</strong> {currentUser.emails[0].address}
+                <b>Email</b> {currentUser.emails ? currentUser.emails[0].address : 'Ingresaste con facebook'}
                 <br/>
-                <strong>Móvil</strong>&nbsp;
+                <b>Móvil</b>&nbsp;
                 {!this.state.editMode ?
                     <span onClick={() => this.setState({editMode: !this.state.editMode})}>
                     {!currentUser.profile.phone ?
                       <span>No hay teléfono registrado
                         <Tooltip placement="bottom" className="in" id="tooltip-bottom">
-                          Da click para ingresar tu teléfono
+                          Da click para ingresar tu móvil
                         </Tooltip>
                       </span>
                     :
@@ -138,51 +148,56 @@ export class Profile extends Component {
                     <input type="text" ref="phone" placeholder="Tu móvil (10 dígitos)"
                     onBlur={this.setPhone.bind(this)} autoFocus/>
                 }
-                &nbsp;<i className="fa fa-question-circle-o"></i>
+                &nbsp;
+                <OverlayTrigger placeholder="top" overlay={tooltip}>
+                  <i className="fa fa-question-circle-o"></i>
+                </OverlayTrigger>
               </div>
             </Col>
-            <Col xs={12} md={6}>
-              <h3>Cambiar contraseña</h3>
-              <form ref="changePassword" onSubmit={this.handleSubmit.bind(this)}>
+            {currentUser.emails ?
+              <Col xs={12} md={6}>
+                <h3>Cambiar contraseña</h3>
+                <form ref="changePassword" onSubmit={this.handleSubmit.bind(this)}>
 
-                <Row>
-                  <Col sm={12} md={12}>
-                    <FormGroup
-                      controlId="formChangePassword">
-                      <ControlLabel>Contraseña actual</ControlLabel>
-                      <FormControl
-                        type="password"
-                        ref="currentPassword"
-                        placeholder="Contraseña actual"
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col sm={12} md={6}>
-                    <FormGroup>
-                      <ControlLabel>Nueva contraseña</ControlLabel>
-                      <FormControl
-                        type="password"
-                        ref="newPassword"
-                        placeholder="Nueva contraseña"
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col sm={12} md={6}>
-                    <FormGroup>
-                      <ControlLabel>Confirmar nueva contraseña</ControlLabel>
-                      <FormControl
-                        type="password"
-                        ref="confirmNewPassword"
-                        placeholder="Confirmar contraseña"
-                      />
-                    </FormGroup>
-                  </Col>
-                </Row>
+                  <Row>
+                    <Col sm={12} md={12}>
+                      <FormGroup
+                        controlId="formChangePassword">
+                        <ControlLabel>Contraseña actual</ControlLabel>
+                        <FormControl
+                          type="password"
+                          ref="currentPassword"
+                          placeholder="Contraseña actual"
+                        />
+                      </FormGroup>
+                    </Col>
+                    <Col sm={12} md={6}>
+                      <FormGroup>
+                        <ControlLabel>Nueva contraseña</ControlLabel>
+                        <FormControl
+                          type="password"
+                          ref="newPassword"
+                          placeholder="Nueva contraseña"
+                        />
+                      </FormGroup>
+                    </Col>
+                    <Col sm={12} md={6}>
+                      <FormGroup>
+                        <ControlLabel>Confirmar nueva contraseña</ControlLabel>
+                        <FormControl
+                          type="password"
+                          ref="confirmNewPassword"
+                          placeholder="Confirmar contraseña"
+                        />
+                      </FormGroup>
+                    </Col>
+                  </Row>
 
-                <Button type="submit" block>Cambiar de contraseña</Button>
+                  <Button type="submit" block>Cambiar de contraseña</Button>
 
-              </form>
-            </Col>
+                </form>
+              </Col>
+            : ''}
           </Row>
         }
       </div>

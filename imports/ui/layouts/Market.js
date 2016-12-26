@@ -1,7 +1,7 @@
 import React from 'react';
 import { CustomerMenu } from '../components/CustomerMenu';
 
-export default class Market extends React.Component {
+export class Market extends React.Component {
   constructor(props) {
     super(props);
 
@@ -15,7 +15,7 @@ export default class Market extends React.Component {
       <div style={{paddingLeft: '5%', paddingRight: '5%'}}>
         {/* <CustomerMenu /> */}
         <h1>Mi central</h1>
-        {this.props.children && React.cloneElement(this.props.children, { currentOrder: this.state.currentOrder })}
+        {this.props.children && React.cloneElement(this.props.children, { currentOrder: this.state.currentOrder})}
       </div>
     )
   }

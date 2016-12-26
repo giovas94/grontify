@@ -30,11 +30,11 @@ export class How extends Component {
         <Helmet
           title="Cómo funciona"
           meta={[
-              {"name": "description", "content": "Entrega de frutas y verduras a domicilio"}
+              {"name": "description", "content": "Entrega de frutas y verduras a domicilio. Ordena frutas y verduras y recibe en 1 hora o menos."}
           ]}
         />
 
-        <h1>¿Cómo funciona?</h1>
+        <h1>¿Cómo funciona Grontify?</h1>
 
         <section id="cd-timeline" className="cd-container">
       		<div className="cd-timeline-block">
@@ -82,7 +82,7 @@ export class How extends Component {
       			<div className="cd-timeline-content">
       				<h2>Elige tu tipo de envío</h2>
       				<p>En la cesta de productos selecciona el tipo de envío que deseas, puede ser envío <b>Express</b>, recibe en menos de 1hr; <b>Estándar</b>, recibe antes de las 20:00hrs; o <b>Programado</b>, selecciona la fecha de entrega a partir del siguiente día de tu mandado.</p>
-              <p>Si tu mandado es de más de $500, el envío Estándar o Programado es GRATIS</p>
+              <p>Si tu mandado es de más de $550, el envío Estándar o Programado es GRATIS</p>
       			</div>
       		</div>
 

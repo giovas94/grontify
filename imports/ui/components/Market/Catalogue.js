@@ -25,8 +25,11 @@ export class Catalogue extends Component {
     this.state= {
       catalogue,
       currentOrder: this.props.currentOrder,
-      shippingType: 'express',
-      shippingCost: 90,
+      shippingType: null, //ID
+      shippingCost: null, //Price
+      shippingTypeName: null, //Name
+      // shippingType: 'express',
+      // shippingCost: 90,
       shippingDate: moment(),
       shippingAddress: null,
       paymentMethod: null,
@@ -169,21 +172,25 @@ export class Catalogue extends Component {
     }
   }
 
-  _handleShippingType(shippingType) {
-    this.setState({shippingType});
+  _handleShippingType(selectedShippingType) {
+    this.setState({shippingType: selectedShippingType});
 
-    switch (shippingType) {
-      case 'estandar':
-        this.setState({shippingCost: 60, shippingDate: moment()});
+    let type = _.find(this.props.shippingTypes, (type) => {
+      return type._id === selectedShippingType
+    });
+    this.setState({shippingCost: type ? type.currentCost : 0, shippingTypeName: type ? type.name : ''});
+    switch (type ? type.name : '') {
+      case 'Estándar':
+        this.setState({shippingDate: moment()});
         break;
-      case 'programado':
-        this.setState({shippingCost: 35, shippingDate: moment().add(1, 'd')});
+      case 'Programado':
+        this.setState({shippingDate: moment().add(1, 'd')});
         break;
-      case 'express':
-        this.setState({shippingCost: 90, shippingDate: moment()});
+      case 'Express':
+        this.setState({shippingDate: moment()});
         break;
       default:
-        this.setState({shippingCost: 0, shippingDate: moment()});
+        this.setState({shippingDate: moment()});
     }
   }
 
@@ -194,6 +201,7 @@ export class Catalogue extends Component {
           return { currentPrice: sum.currentPrice + n.currentPrice * n.qty }
         }, { currentPrice: 0 }).currentPrice;
     }
+
     this.setState({currentOrderSubtotal});
   }
 
@@ -241,6 +249,7 @@ export class Catalogue extends Component {
           offset: 100,
           html: true,
         });
+        this.setState({creatingOrder: false});
       }
     });
 
@@ -258,10 +267,13 @@ export class Catalogue extends Component {
           </a>
         </div>
         <OrderSummary {...this.state}
+          fistOrderDiscount={this.state.currentOrderSubtotal >= 100 && this.props.ordersCount === 0 ? 150 : 0}
+          shippingDiscount={this.state.currentOrderSubtotal >= 550 && this.state.shippingTypeName !== 'Express' ? this.state.shippingTypeName === 'Estándar' ? 60 : 36 : 0 }
           handleShippingType={this._handleShippingType.bind(this)}
           handleShippingAddress={this._handleShippingAddress.bind(this)}
           removeOrderProduct={this._removeOrderProduct.bind(this)}
           handleShippingDate={this._handleShippingDate.bind(this)}
+          shippingTypes={this.props.shippingTypes}
           handlePaymentMethod={this._handlePaymentMethod.bind(this)}
           addresses={!this.props.currentUser ? [] : this.props.currentUser.profile.addresses}
           createOrder={this._createOrder.bind(this)}/>
@@ -269,32 +281,31 @@ export class Catalogue extends Component {
         <Row>
           <Col sm={12}>
             <FormGroup>
-              <FormControl placeholder="Buscar" type="text" ref="search"
+              <FormControl bsSize="large" placeholder="Buscar" type="text" ref="search"
                 onChange={(e) => { this.props.searchQuery.set(e.target.value) }}/>
             </FormGroup>
           </Col>
-        </Row>
 
-
-        <section className="products">
-        {this.props.loading ?
-          <div style={{marginTop: '20px'}}>
-            <Loader type="ball-scale-multiple" active={true} />
-          </div>
-        :
-
-          !this.props.catalogue.length ?
-            'No hay, no hay, no hay!'
+          <Col xs={12} className="products">
+          {this.props.loading ?
+            <div style={{marginTop: '20px'}}>
+              <Loader type="ball-scale-multiple" active={true} />
+            </div>
           :
-            this.props.catalogue.map(product => {
-              if (product.productStatus !== 'cancelado') {
-                  return <Product key={product._id} product={product} currentOrder={this.state.currentOrder}
-                  handleProduct={this._handleProduct.bind(this)}
-                  handleCurrentOrderSubtotal={this._handleCurrentOrderSubtotal.bind(this)}/>
-              }
-            })
-        }
-        </section>
+
+            !this.props.catalogue.length ?
+              <div>No hay, no hay, no hay! <Link to="/help">Necesito un producto que no está en el catálogo</Link></div>
+            :
+              this.props.catalogue.map(product => {
+                if (product.productStatus !== 'cancelado') {
+                    return <Product key={product._id} product={product} currentOrder={this.state.currentOrder}
+                    handleProduct={this._handleProduct.bind(this)}
+                    handleCurrentOrderSubtotal={this._handleCurrentOrderSubtotal.bind(this)}/>
+                }
+              })
+          }
+          </Col>
+        </Row>
 
         <div id="cd-shadow-layer"></div>
 
@@ -306,6 +317,8 @@ export class Catalogue extends Component {
 Catalogue.propTypes = {
   loading: PropTypes.bool,
   catalogue: PropTypes.array,
+  shippingTypes: PropTypes.array,
+  ordersCount: PropTypes.number,
   currentUser: PropTypes.object,
   device_session_id: PropTypes.string,
 };

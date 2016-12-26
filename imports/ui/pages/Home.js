@@ -10,7 +10,7 @@ export class Home extends Component {
         <Helmet
             title="Homepage"
             meta={[
-                {"name": "description", "content": "Frutas y verduras a domicilio. De la central a tu hogar."}
+                {"name": "description", "content": "Frutas y verduras a domicilio. De la central a tu hogar"}
             ]}
         />
 
@@ -26,7 +26,7 @@ export class Home extends Component {
         <section className="section">
           <div className="container">
             <div className="col-3 text--center">
-              <img src="http://res.cloudinary.com/grontify/image/upload/v1477066907/mascot/grontify-mascot-HQ.png" alt="" className="details-img--ball"/>
+              <img src="https://res.cloudinary.com/grontify/image/upload/v1477066907/mascot/grontify-mascot-HQ.png" alt="" className="details-img--ball"/>
             </div>
             <div className="col-7 details">
               <h3>¿Por qué Grontify es genial?</h3>
@@ -34,7 +34,7 @@ export class Home extends Component {
                 <li>Frutas y verduras de primera</li>
                 <li>A precios de la central</li>
                 <li>Si así lo prefieres, recibe en menos de una hora</li>
-                <li>Entregas GRATIS en ordenes mayores a MXN $500</li>
+                <li>Entregas GRATIS en ordenes mayores a MXN $550</li>
               </ul>
             </div>
           </div>
@@ -67,7 +67,7 @@ export class Home extends Component {
         <section className="section section--primary--alt">
           <div className="container">
             <h3>Realiza tu primer mandado ahora y</h3>
-            <p style={{color: '#e0d5b1', textAlign: 'center'}}>obtén $100.00 de bonificación para tus frutas y verduras además envío estándar sin costo.</p>
+            <p style={{color: '#e0d5b1', textAlign: 'center'}}>obtén $150.00 de bonificación para tus frutas y verduras.</p>
           </div>
         </section>
 
