@@ -3,6 +3,15 @@ import Helmet from 'react-helmet';
 import { Link, browserHistory } from 'react-router';
 
 export class Home extends Component {
+  componentDidMount() {
+    swal({
+      imageUrl: "https://res.cloudinary.com/grontify/image/upload/c_scale,w_100/v1476989206/logo/grontify-logo-black-HQ.png",
+      title: "Área de servicio",
+      text: "Actualmente nuestro servicio se proporciona en la Ciudad de México y el municipio de Huixquilucan.",
+      timer: 4500,
+      showConfirmButton: true
+    });
+  }
   render() {
     return (
       <div>
@@ -52,7 +61,7 @@ export class Home extends Component {
             <div className="col-3 features">
               <i className="fa fa-credit-card"></i>
               <p>
-                Paga con tarjeta de crédito o débito. No te realizamos ningún cargo hasta que confirmes de recibido!
+                Paga con tarjeta de crédito o débito. No te realizamos ningún cargo hasta que recibas tu pedido!
               </p>
             </div>
             <div className="col-3 features">

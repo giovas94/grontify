@@ -71,7 +71,7 @@ export class CreditCard extends Component {
         className="form-control text-center"
         type="text"
         ref="expiration"
-        placeholder="MM/YYYY"
+        placeholder="MM/YY o MM/YYYY"
       />
       <input
         className="form-control text-center"

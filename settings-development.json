@@ -8,7 +8,8 @@
   "private": {
     "openpay": {
       "MERCHANT_ID": "mzjwuxpp9mziwukxn0qi",
-      "PRIVATE_KEY": "sk_180fa6327d8c4517a7ee5f611d415c50"
+      "PRIVATE_KEY": "sk_180fa6327d8c4517a7ee5f611d415c50",
+      "PRODUCTION_READY": false
     },
     "oauth": {
       "facebook": {
@@ -20,7 +21,8 @@
   "public": {
     "openpay": {
       "MERCHANT_ID": "mzjwuxpp9mziwukxn0qi",
-      "PUBLIC_KEY": "pk_d28d7b1045a64f938f4d03e4ab9418c9"
+      "PUBLIC_KEY": "pk_d28d7b1045a64f938f4d03e4ab9418c9",
+      "SANDBOX_MODE": true
     }
   }
 }

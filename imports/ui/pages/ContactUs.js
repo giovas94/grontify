@@ -82,11 +82,11 @@ export class ContactUs extends Component {
           <Col sm={12} md={4}>
             <h3>Datos de contacto</h3>
             <h4>Nuestras Oficinas</h4>
-            <p>Zacatecas #8 Interior 10 Col. Roma Norte Del. Cuauhtémoc CP. 06700 <br/>México, México</p>
+            <p>Paseo de la Reforma No. 296 Piso 42 Col. Juárez Del. Cuauhtémoc CP. 06600 <br/>México, México</p>
             <h4>Teléfono</h4>
-            <p>5264 8901</p>
+            <p>(55) 5264 8901</p>
             <h4><i className="fa fa-whatsapp"></i> Whatsapp</h4>
-            <p>55 4834 9853</p>
+            <p>55 3555 2173</p>
             <h4>Email</h4>
             <p>contacto@grontify.com</p>
           </Col>

@@ -16,7 +16,7 @@ export const insertUsers = new ValidatedMethod({
     password: { type: String }
   }).validator(),
   run({name, last_name, email, password}) {
-    var future = new Future();
+    // var future = new Future();
 
     const newUser = Accounts.createUser({
       email,
@@ -28,32 +28,32 @@ export const insertUsers = new ValidatedMethod({
       }
     });
 
-    Roles.addUsersToRoles(newUser, 'customer', 'grontify.com');
+    // Roles.addUsersToRoles(newUser, 'customer', 'grontify.com');
 
     Accounts.sendVerificationEmail(newUser);
 
-    let customerRequest = {
-      'external_id': newUser,
-      name,
-      last_name,
-      email,
-      requires_account: false
-    };
+    // let customerRequest = {
+    //   'external_id': newUser,
+    //   name,
+    //   last_name,
+    //   email,
+    //   requires_account: false
+    // };
 
-    openpay.customers.create(customerRequest, (error, customer) => {
-      if (error) {
-        future.throw(new Meteor.Error(error));
-      } else {
-        future.return(customer);
-      }
-    });
+    // openpay.customers.create(customerRequest, (error, customer) => {
+    //   if (error) {
+    //     future.throw(new Meteor.Error(error));
+    //   } else {
+    //     future.return(customer);
+    //   }
+    // });
+    //
+    // if (future.wait().id) {
+    //   Meteor.users.update({ _id: newUser }, { $set: { 'openpay_id': future.wait().id } })
+    // }
 
-    if (future.wait().id) {
-      Meteor.users.update({ _id: newUser }, { $set: { 'openpay_id': future.wait().id } })
-    }
-
-    return future.wait();
-    // return newUser;
+    // return future.wait();
+    return newUser;
   }
 });
 
