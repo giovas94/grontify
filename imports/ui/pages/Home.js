@@ -2,15 +2,20 @@ import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import { Link, browserHistory } from 'react-router';
 
+let showAreaAlert = new ReactiveVar(true);
+
 export class Home extends Component {
   componentDidMount() {
-    swal({
-      imageUrl: "https://res.cloudinary.com/grontify/image/upload/c_scale,w_100/v1476989206/logo/grontify-logo-black-HQ.png",
-      title: "Área de servicio",
-      text: "Actualmente nuestro servicio se proporciona en la Ciudad de México y el municipio de Huixquilucan.",
-      timer: 4500,
-      showConfirmButton: true
-    });
+    if (showAreaAlert.get()) {
+      swal({
+        imageUrl: "https://res.cloudinary.com/grontify/image/upload/c_scale,w_100/v1476989206/logo/grontify-logo-black-HQ.png",
+        title: "Área de servicio",
+        text: "Actualmente nuestro servicio se proporciona en la Ciudad de México, el municipio de Huixquilucan y Naucalpan Edo. Méx.",
+        timer: 4500,
+        showConfirmButton: true
+      });
+      showAreaAlert.set(false);
+    }
   }
   render() {
     return (
@@ -115,8 +120,6 @@ export class Home extends Component {
             <Link to="/market" className="btn btn-success btn-lg">Haz tu mandado ahora!</Link>
           </div>
         </section>
-
-
       </div>
     )
   }

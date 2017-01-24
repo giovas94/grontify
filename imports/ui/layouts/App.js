@@ -115,11 +115,11 @@ export default class App extends Component {
                 {"name": "description", "content": "Frutas y verduras a precios de central de abastos a domicilio. De la central a tu hogar. Mandado express para todos"},
                 {"property": "og:title", "content": "Grontify Entrega de frutas y verduras a domicilio"},
                 {"property": "og:type", "content": "website"},
-                {"property": "og:image", "content": "http://res.cloudinary.com/grontify/image/upload/v1476989047/logo/grontify-logo-HQ.png"},
-                {"property": "og:url", "content": "http://grontify.com"},
+                {"property": "og:image", "content": "https://res.cloudinary.com/grontify/image/upload/v1476989047/logo/grontify-logo-HQ.png"},
+                {"property": "og:url", "content": "https://www.grontify.com"},
             ]}
             link={[
-              {"rel": "icon", "href": "http://res.cloudinary.com/grontify/image/upload/c_pad,h_32,w_32/v1477066907/mascot/grontify-mascot-HQ.png"}
+              {"rel": "icon", "href": "https://res.cloudinary.com/grontify/image/upload/c_pad,h_32,w_32/v1477066907/mascot/grontify-mascot-HQ.png"}
             ]}
         />
 
@@ -130,7 +130,7 @@ export default class App extends Component {
           {this.props.children}
         </main>
         <Alert stack={{limit: 3}} />
-
+        <br/><br/>
         {/* <!-- Page Footer--> */}
         <Footer />
 

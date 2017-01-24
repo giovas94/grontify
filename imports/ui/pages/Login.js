@@ -249,7 +249,7 @@ export class Login extends Component {
             <p className="message">¿Ya estas registrado? <b><a href="#">Inicia sesión</a></b></p>
           </form>
           <form className="login-form" onSubmit={this._handleSignin.bind(this)}>
-            <input type="text" ref="login_email" placeholder="Email"/>
+            <input type="email" ref="login_email" placeholder="Email"/>
             <input type="password" ref="login_password" placeholder="Contraseña"/>
             <button type="submit" disabled={this.state.logginIn}>{!this.state.logginIn ? 'Inicia Sesión' : 'Ingresando...'}</button>
             <p className="message">¿No tienes cuenta? <b><a href="#">Regístrate</a></b></p>

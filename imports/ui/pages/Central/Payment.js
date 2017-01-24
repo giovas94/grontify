@@ -6,11 +6,12 @@ import { browserHistory } from 'react-router';
 import { Accounts } from 'meteor/accounts-base';
 import {Row, Col} from 'react-bootstrap';
 
+import Loader from 'react-loaders';
+
 import { CreditCard } from '../../components/Market/Payment/CreditCard.js';
 import { List } from '../../components/Market/Payment/List.js';
 
 const device_session_id = OpenPay.deviceData.setup();
-console.log(device_session_id);
 
 export class Payment extends Component {
   constructor(props) {
@@ -18,6 +19,7 @@ export class Payment extends Component {
 
     this.state = {
       loadingCardsList: false,
+      savingCard: false,
       cards: []
     }
 
@@ -51,7 +53,7 @@ export class Payment extends Component {
   }
 
   _newCard(card) {
-
+    this.setState({savingCard: true});
     OpenPay.token.create(card, (response) => {
       console.log(response)
 
@@ -62,10 +64,10 @@ export class Payment extends Component {
 
       Meteor.call('payments.insert', {card_req}, (err, result) => {
         if (!err) {
-          Alert.success(`<h4>Tarjeta guardada!</h4>`, {
+          Alert.success(`<h4>Tarjeta guardada correctamente!</h4>`, {
             position: 'top-right',
             effect: 'slide',
-            timeout: 3500,
+            timeout: 4500,
             offset: 100,
             html: true,
           });
@@ -98,8 +100,19 @@ export class Payment extends Component {
             html: true,
           });
         }
+        this.setState({savingCard: false});
       });
-    }, (error) => { console.log(error) });
+    }, (error) => {
+      console.log(error.data.description);
+      Alert.error(error.data.description, {
+        position: 'top-right',
+        effect: 'slide',
+        timeout: 3500,
+        offset: 100,
+        html: true,
+      });
+      this.setState({savingCard: false});
+    });
   }
 
   _deleteCard(cardId) {
@@ -149,7 +162,14 @@ export class Payment extends Component {
         <Col sm={12} md={6}>
           <h3>Agregar método de pago</h3>
           <p style={{fontSize: 'small'}}>Ingresa los datos exactamente como aparecen en la tarjeta. <br/>Tu tarjeta y pagos son procesados de forma segura por <img src="img/logo_openpay.png" width="55px" alt="Openpay"/> </p>
-          <CreditCard newCard={this._newCard.bind(this)} />
+          {this.state.savingCard ?
+            <div>
+              <br/>
+              <Loader type="ball-pulse" active={true} />
+            </div>
+          :
+            <CreditCard newCard={this._newCard.bind(this)} />
+          }
         </Col>
 
         <Col sm={12} md={6}>

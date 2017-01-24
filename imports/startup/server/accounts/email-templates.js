@@ -1,8 +1,8 @@
 import { Accounts } from 'meteor/accounts-base';
 
-const name = "Grontify";
-const email = "no-reply@meteorapp.com";
-const from = "Grontify <no-reply@meteorapp.com>";
+const name = "Grontify Frutas y verduras a domicilio";
+const email = "contacto@grontify.com";
+const from = "Grontify <contacto@grontify.com>";
 const emailTemplates = Accounts.emailTemplates;
 
 emailTemplates.siteName = name;

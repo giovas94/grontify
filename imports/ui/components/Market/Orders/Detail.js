@@ -64,9 +64,13 @@ export class OrderDetail extends Component {
               </Col>
               <Col sm={6}>
                 <h4>Método de pago</h4>
-                <p>
-                  {order.usedCard.bank_name} {order.usedCard.card_number}
-                </p>
+                <div>
+                  {order.usedCard.paymentMethod && order.usedCard.paymentMethod === 'efectivo' ?
+                    <p>{order.usedCard['payment-description']}</p>
+                  :
+                    <p>{order.usedCard.bank_name || order.usedCard.brand} {order.usedCard.card_number}</p>
+                  }
+                </div>
               </Col>
             </Row>
           </div>

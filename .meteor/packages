@@ -13,12 +13,12 @@ tracker@1.1.1                 # Meteor's client-side reactive programming librar
 
 standard-minifier-js@1.2.1    # JS minifier run for production mode
 es5-shim@4.6.15                # ECMAScript 5 compatibility for older browsers.
-ecmascript@0.5.9              # Enable ECMAScript2015+ syntax in app code
+ecmascript@0.6.1              # Enable ECMAScript2015+ syntax in app code
 shell-server@0.2.1            # Server-side component of the `meteor shell` command
 
 static-html@1.1.12_1
 react-meteor-data
-accounts-password@1.3.2
+accounts-password@1.3.3
 seba:minifiers-autoprefixer
 fourseven:scss
 msavin:mongol
@@ -39,5 +39,7 @@ mrt:modernizr-meteor
 lepozepo:accounting
 kevohagan:sweetalert
 tmeasday:publish-counts
-accounts-facebook
-service-configuration
+accounts-facebook@1.0.11
+service-configuration@1.0.11
+mdg:seo
+mystor:device-detection

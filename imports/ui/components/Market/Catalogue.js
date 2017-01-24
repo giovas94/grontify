@@ -60,8 +60,8 @@ export class Catalogue extends Component {
             card.value = card['id'];
             card.label = card['card_number'] + ' - ' + card['bank_name'];
             return card;
-          })
-          this.loadInterval && this.setState({cards: myCards});
+          });
+          this.loadInterval && this.setState({cards: _.concat(myCards, {value: 'efectivo', label: 'Pago en efectivo a la entrega.'})});
         }
         this.loadInterval &&  this.setState({loadingCardsList: !this.state.loadingCardsList});
       })
@@ -225,19 +225,37 @@ export class Catalogue extends Component {
     shippingCost, shippingDate: shippingDate.toDate(), subtotal: currentOrderSubtotal, paymentMethod,
     device_session_id: this.props.device_session_id}, (err, result) => {
       if (!err) {
-        localStorage.setItem(`currentOrder-${Meteor.userId()}`, JSON.stringify([]))
-        this.setState({currentOrder: []});
-        Alert.success('<h4>Excelente, orden generada!</h4>', {
-          position: 'top-right',
-          effect: 'slide',
-          onShow: function () {
-              console.log('Orden creada con éxito!')
-          },
-          timeout: 3500,
-          offset: 100,
-          html: true,
-        });
-        browserHistory.push('/orders');
+        console.log(result);
+
+        if (result && result.error) {
+          Alert.error(`<h4>${result.error.description} ${result.error.error_code}</h4>`, {
+            position: 'top-right',
+            effect: 'slide',
+            onShow: function () {
+                console.log('Error al crear orden!')
+            },
+            timeout: 2000,
+            offset: 100,
+            html: true,
+          });
+          this.setState({creatingOrder: false});
+          Meteor.call('orders.remove', {orderId: result.orderId});
+        } else {
+          localStorage.setItem(`currentOrder-${Meteor.userId()}`, JSON.stringify([]))
+          this.setState({currentOrder: []});
+          Alert.success('<h4>Excelente, orden generada!</h4>', {
+            position: 'top-right',
+            effect: 'slide',
+            onShow: function () {
+                console.log('Orden creada con éxito!')
+            },
+            timeout: 3500,
+            offset: 100,
+            html: true,
+          });
+          console.log(result);
+          browserHistory.push(`/order/${result.orderId || result.order_id}`);
+        }
       } else {
         Alert.error(`<h4>${err.reason}</h4>`, {
           position: 'top-right',
@@ -267,7 +285,7 @@ export class Catalogue extends Component {
           </a>
         </div>
         <OrderSummary {...this.state}
-          fistOrderDiscount={this.state.currentOrderSubtotal >= 100 && this.props.ordersCount === 0 ? 150 : 0}
+          fistOrderDiscount={this.state.currentOrderSubtotal >= 200 && this.props.ordersCount === 0 ? 150 : 0}
           shippingDiscount={this.state.currentOrderSubtotal >= 550 && this.state.shippingTypeName !== 'Express' ? this.state.shippingTypeName === 'Estándar' ? 60 : 36 : 0 }
           handleShippingType={this._handleShippingType.bind(this)}
           handleShippingAddress={this._handleShippingAddress.bind(this)}
@@ -297,7 +315,7 @@ export class Catalogue extends Component {
               <div>No hay, no hay, no hay! <Link to="/help">Necesito un producto que no está en el catálogo</Link></div>
             :
               this.props.catalogue.map(product => {
-                if (product.productStatus !== 'cancelado') {
+                if (product.productStatus === 'activo') {
                     return <Product key={product._id} product={product} currentOrder={this.state.currentOrder}
                     handleProduct={this._handleProduct.bind(this)}
                     handleCurrentOrderSubtotal={this._handleCurrentOrderSubtotal.bind(this)}/>

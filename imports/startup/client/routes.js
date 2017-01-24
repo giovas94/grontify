@@ -1,5 +1,6 @@
 import React from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import ReactGA from 'react-ga';
 
 import App from '../../ui/layouts/App.js';
 // import Market from '../../ui/layouts/Market.js';
@@ -8,6 +9,7 @@ import { Home } from '../../ui/pages/Home.js';
 import { NotFound } from '../../ui/pages/NotFound.js';
 import { How } from '../../ui/pages/How.js';
 import { ContactUs } from '../../ui/pages/ContactUs.js';
+import { ServiceArea } from '../../ui/pages/ServiceArea.js';
 import { Login } from '../../ui/pages/Login.js';
 import { RecoverPassword } from '../../ui/pages/RecoverPassword.js';
 import { ResetPassword } from '../../ui/pages/ResetPassword.js';
@@ -30,6 +32,13 @@ import { Address } from '../../ui/pages/Central/Address.js';
 import { AddressForm } from '../../ui/components/Market/Addresses/AddressForm.js';
 
 
+ReactGA.initialize('UA-89652373-1');
+
+const fireTracking = () => {
+  ReactGA.set({ page: window.location.pathname });
+  ReactGA.pageview(window.location.pathname);
+}
+
 const requireAuth = (nextState, replace) => {
   if (!Meteor.loggingIn() && !Meteor.userId()) {
     replace({
@@ -48,7 +57,7 @@ const redirectIfLoggedIn = (nextState, replace, next) => {
 };
 
 export const renderRoutes = () => (
-  <Router history={browserHistory}>
+  <Router onUpdate={fireTracking} history={browserHistory}>
     <Route name="verify-email" path="/verify-email/:token" component={ VerifyEmail } />
     <Route path="/" component={App}>
       <IndexRoute name="home" component={Home} />
@@ -57,6 +66,7 @@ export const renderRoutes = () => (
       <Route name="reset-password" path="/reset-password/:token" component={ ResetPassword } />
       <Route name="how" path="how-works" component={How} />
       <Route name="contact" path="contact" component={ContactUs} />
+      <Route name="service-area" path="service-area" component={ServiceArea} />
       <Route name="market" path="market" component={MarketContainer} onEnter={requireAuth}>
         <IndexRoute name="catalogue" component={CatalogueContainer} onEnter={requireAuth} />
         <Route name="profile" path="/profile" component={ProfileContainer} onEnter={requireAuth} />

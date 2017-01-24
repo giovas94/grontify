@@ -35,6 +35,7 @@ export const Navbar = ({currentRoute, isLoginPage}) => (
         <li><Link to="/" className={currentRoute[1].name === 'home' ? 'active' : ''}>Home</Link></li>
         <li><Link to="/how-works" activeClassName="active">Cómo funciona</Link></li>
         <li><Link to="/contact" activeClassName="active">Contáctanos</Link></li>
+        <li><Link to="/service-area" activeClassName="active">Área de Servicio</Link></li>
         <li><Link to="/market" activeClassName="active">Mi Central</Link></li>
         <li>{!Meteor.userId() ?
           <Link to="/login" activeClassName="active">Inicia Sesión / Regístrate</Link>

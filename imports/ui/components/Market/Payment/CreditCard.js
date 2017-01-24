@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Payment from 'payment';
+import {Row, Col} from 'react-bootstrap';
 
 export class CreditCard extends Component {
   constructor(props) {
@@ -15,18 +16,25 @@ export class CreditCard extends Component {
     const { refs } = this;
     const holder_name = refs.name.value;
     const card_number = parseInt(refs.number.value.replace(/ /g,''));
-    const expiration = refs.expiration.value.split('/');
-    const expiration_month = parseInt(expiration[0], 10);
-    const expiration_year = parseInt(expiration[1], 10);
+    const expiration = Meteor.Device.isDesktop() ? refs.expiration.value.split('/') : '';
+    const expiration_month = Meteor.Device.isDesktop() ? parseInt(expiration[0], 10) : parseInt(refs.expiration_month.value);
+    const expiration_year = Meteor.Device.isDesktop() ? parseInt(expiration[1], 10) : parseInt(refs.expiration_year.value);
     const cvv2 = parseInt(refs.cvc.value);
     const card = { holder_name, card_number, expiration_month, expiration_year, cvv2 };
 
+    //Create new card
     this.props.newCard(card);
 
     this.refs.name.value = null;
     this.refs.number.value = null;
     this.refs.cvc.value = null;
-    this.refs.expiration.value = null;
+
+    if (Meteor.Device.isDesktop()) {
+      this.refs.expiration.value = null;
+    } else {
+      this.refs.expiration_year = null;
+      this.refs.expiration_month = null;
+    }
   }
 
   setCardType(event) {
@@ -53,43 +61,68 @@ export class CreditCard extends Component {
   }
 
   renderCardForm() {
-    return (<form className="CardForm" onSubmit={ this.handleSubmit }>
-      <input
-        className="form-control text-center"
-        type="text"
-        ref="name"
-        placeholder="Nombre del titular"
-      />
-      <input
-        onKeyUp={ this.setCardType }
-        className="form-control text-center"
-        type="text"
-        ref="number"
-        placeholder="Número de tarjeta"
-      />
-      <input
-        className="form-control text-center"
-        type="text"
-        ref="expiration"
-        placeholder="MM/YY o MM/YYYY"
-      />
-      <input
-        className="form-control text-center"
-        type="text"
-        ref="cvc"
-        placeholder="CVC"
-      />
+    return (
+      <form className="CardForm" onSubmit={ this.handleSubmit }>
+        <input
+          className="form-control text-center"
+          type="text"
+          ref="name"
+          placeholder="Nombre del titular"
+        />
+        <input
+          onKeyUp={ this.setCardType }
+          className="form-control text-center"
+          type="text"
+          ref="number"
+          placeholder="Número de tarjeta"
+        />
+        {Meteor.Device.isDesktop() ?
+          <input
+            className="form-control text-center"
+            type="text"
+            ref="expiration"
+            placeholder="MM/YY o MM/YYYY"
+          />
+        :
+          <div className="row">
+            <div className="col-xs-6">
+              <input type="number"
+                className="form-control text-center"
+                ref="expiration_month"
+                placeholder="MM"
+              />
+            </div>
+            <div className="col-xs-6">
+              <input type="number"
+                className="form-control text-center"
+                ref="expiration_year"
+                placeholder="YY"
+              />
+            </div>
+          </div>
+        }
 
-      { this.renderCardList() }
+        <input
+          className="form-control text-center"
+          type="text"
+          ref="cvc"
+          placeholder="CVC"
+          autoComplete="off"
+        />
 
-      <button className="btn btn-block" type="submit">Guardar tarjeta</button>
-    </form>);
+        { this.renderCardList() }
+
+        <button className="btn btn-block" type="submit">Guardar tarjeta</button>
+      </form>
+    );
   }
 
   componentDidMount() {
     const { number, expiration, cvc } = this.refs;
     Payment.formatCardNumber(number);
-    Payment.formatCardExpiry(expiration);
+    if (Meteor.Device.isDesktop()) {
+      Payment.formatCardExpiry(expiration);
+    }
     Payment.formatCardCVC(cvc);
   }
 

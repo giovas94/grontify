@@ -99,7 +99,7 @@ export const createOrder = new ValidatedMethod({
       return { currentPrice: sum.currentPrice + n.currentPrice * n.qty }
     }, { currentPrice: 0 }).currentPrice;
 
-    if (userOrders === 0 && secureSubtotal >= 100) {
+    if (userOrders === 0 && secureSubtotal >= 200) {
       orderDiscount = 150;
     }
 
@@ -121,15 +121,20 @@ export const createOrder = new ValidatedMethod({
     const openpayId = Meteor.users.find({_id: this.userId}, {fields: { openpay_id: 1 }}).fetch()[0].openpay_id;
 
     let usedCard = {};
-    openpay.customers.cards.get(openpayId, paymentMethod, (error, card) => {
-      if (error) {
-        cardFuture.throw(new Meteor.Error(error.http_code, error.description, error.error_code));
-      } else {
-        cardFuture.return(card);
-      }
-    });
 
-    usedCard = cardFuture.wait();
+    if (paymentMethod !== 'efectivo') {
+      openpay.customers.cards.get(openpayId, paymentMethod, (error, card) => {
+        if (error) {
+          cardFuture.throw(new Meteor.Error(error.http_code, error.description, error.error_code));
+        } else {
+          cardFuture.return(card);
+        }
+      });
+
+      usedCard = cardFuture.wait();
+    } else {
+      usedCard = { paymentMethod, 'payment-description': 'Pago en efectivo a la entrega.' };
+    }
 
 
     // La configuración horaria del servidor es GMT+0000 (UTC), la de México es en GMT-0600 (CST)
@@ -144,6 +149,8 @@ export const createOrder = new ValidatedMethod({
       customShippingDate = secureShippingType.name === 'Express' ? moment().utcOffset("-06:00").get('hours') < 19 ? moment(shippingDate).utcOffset("-06:00").add(1, 'hours').toDate() : moment(shippingDate).utcOffset("-06:00").add(1, 'days').hours(10).minutes(0).toDate() : secureShippingType.name === 'Estándar' ? moment().utcOffset("-06:00").get('hours') < 16 ? moment(shippingDate).utcOffset("-06:00").hours(20).minutes(0).toDate() : moment(shippingDate).utcOffset("-06:00").add(1, 'days').hours(14).minutes(0).toDate() : moment(shippingDate).utcOffset("-06:00").hours(16).minutes(0).toDate();
     }
 
+    let secureTotal = secureSubtotal + secureShippingType.currentCost - (orderDiscount + shippingDiscount);
+
     let orderId = Orders.insert({
       customerId: this.userId,
       createdAt: new Date(),
@@ -156,14 +163,14 @@ export const createOrder = new ValidatedMethod({
       shippingAddress,
       shippingDate: customShippingDate,
       secureSubtotal,
-      total: secureSubtotal + secureShippingType.currentCost - (orderDiscount + shippingDiscount),
+      total: secureTotal.toFixed(2),
       usedCard
     });
 
     var chargeRequest = {
        'source_id' : paymentMethod,
        'method' : 'card',
-       'amount' : secureSubtotal + secureShippingType.currentCost - (orderDiscount + shippingDiscount),
+       'amount' : secureTotal.toFixed(2),
        'currency' : 'MXN',
        'description' : `Mi mandado ${orderId}`,
        'order_id' : orderId,
@@ -171,17 +178,36 @@ export const createOrder = new ValidatedMethod({
        'capture': false
     }
 
-    openpay.customers.charges.create(openpayId, chargeRequest, (error, response) => {
-      if ( error ) {
-        future.throw(new Meteor.Error(error.http_code, error.description, error.error_code));
-      } else {
-        future.return( response );
-      }
-    });
+    if (paymentMethod !== 'efectivo') {
+      openpay.customers.charges.create(openpayId, chargeRequest, (error, response) => {
+        if ( error ) {
+          future.return( { error, orderId: orderId } /** new Meteor.Error(error.http_code, error.description, error.error_code) **/ );
+        } else {
+          future.return( response );
+        }
+      });
 
-    return future.wait();
+      return future.wait();
+    } else {
+      return { orderId };
+    }
   }
 });
+
+export const removeOrder = new ValidatedMethod({
+  name: 'orders.remove',
+  validate: new SimpleSchema({
+    orderId: { type: String }
+  }).validator(),
+  run({orderId}) {
+
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    Orders.remove(orderId);
+  }
+})
 
 
 export const cancelOrder = new ValidatedMethod({
