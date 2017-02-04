@@ -3,6 +3,7 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import ReactGA from 'react-ga';
 
 import App from '../../ui/layouts/App.js';
+import Alert from 'react-s-alert';
 // import Market from '../../ui/layouts/Market.js';
 
 import { Home } from '../../ui/pages/Home.js';
@@ -41,6 +42,13 @@ const fireTracking = () => {
 
 const requireAuth = (nextState, replace) => {
   if (!Meteor.loggingIn() && !Meteor.userId()) {
+    Alert.warning(`Inicia sesión para ver está página.`, {
+      position: 'top-right',
+      effect: 'slide',
+      timeout: 3500,
+      offset: 100,
+      html: true,
+    });
     replace({
       pathname: '/login',
       state: { nextPathname: nextState.location.pathname },
@@ -67,8 +75,8 @@ export const renderRoutes = () => (
       <Route name="how" path="how-works" component={How} />
       <Route name="contact" path="contact" component={ContactUs} />
       <Route name="service-area" path="service-area" component={ServiceArea} />
-      <Route name="market" path="market" component={MarketContainer} onEnter={requireAuth}>
-        <IndexRoute name="catalogue" component={CatalogueContainer} onEnter={requireAuth} />
+      <Route name="market" path="market" component={MarketContainer} >
+        <IndexRoute name="catalogue" component={CatalogueContainer} />
         <Route name="profile" path="/profile" component={ProfileContainer} onEnter={requireAuth} />
         <Route name="payment" path="/payment" component={Payment} onEnter={requireAuth} />
         <Route name="address" path="/address" component={AddressesContainer} onEnter={requireAuth} />

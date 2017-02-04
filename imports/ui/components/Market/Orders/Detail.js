@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link, browserHistory } from 'react-router';
 import {Col, Row, Table, Alert} from 'react-bootstrap';
 
+import { handleStatusLabel, handleStatusColor } from '../../../../modules/orderStatusLabels';
+
 import {ShippingAddress} from './ShippingAddress';
 
 export class OrderDetail extends Component {
@@ -24,7 +26,7 @@ export class OrderDetail extends Component {
             <div>
               <b>ID</b> {order._id}<br/>
               <b>Fecha</b> {moment(order.createdAt).format('DD/MM/YYYY HH:mm:ss')}<br/>
-              <b style={{fontSize: '2rem'}}>Estatus {order.status.toUpperCase()}</b><br/>
+              <b style={{fontSize: '2rem'}}>Estatus <label style={handleStatusColor(order.status)}>{handleStatusLabel(order.status).toUpperCase()}</label></b><br/>
               <b>Fecha de entrega {moment(order.shippingDate).format('DD/MM/YYYY')}</b>
             </div>
 
@@ -75,6 +77,7 @@ export class OrderDetail extends Component {
             </Row>
           </div>
         }
+        <br/>
       </div>
     )
   }

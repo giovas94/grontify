@@ -228,7 +228,7 @@ export class Login extends Component {
 
         <div className="form-container">
           <div className="info">
-            <h1>Inicia Sesión o Regístrate</h1><span>De la central a tu hogar.</span>
+            <h1>Inicia Sesión o Regístrate</h1><span style={{'fontSize': '2rem', 'color': '#00a6a6'}}>De la central a tu hogar.</span>
           </div>
         </div>
         <div className="form">
@@ -245,14 +245,14 @@ export class Login extends Component {
             <input type="email" ref="email" placeholder="Email"/>
             <input type="password" ref="password" placeholder="Contraseña"/>
 
-            <button type="submit" disabled={this.state.logginIn}>{!this.state.logginIn ? 'Regístrate' : 'Procesando...'}</button>
-            <p className="message">¿Ya estas registrado? <b><a href="#">Inicia sesión</a></b></p>
+            <button type="submit" disabled={this.state.logginIn} style={{'fontSize': '2rem'}}>{!this.state.logginIn ? 'Regístrate' : 'Procesando...'}</button>
+            <p className="message" style={{'fontSize': '1.5rem'}}>¿Ya estas registrado? <b><a href="#">Inicia sesión</a></b></p>
           </form>
           <form className="login-form" onSubmit={this._handleSignin.bind(this)}>
             <input type="email" ref="login_email" placeholder="Email"/>
             <input type="password" ref="login_password" placeholder="Contraseña"/>
-            <button type="submit" disabled={this.state.logginIn}>{!this.state.logginIn ? 'Inicia Sesión' : 'Ingresando...'}</button>
-            <p className="message">¿No tienes cuenta? <b><a href="#">Regístrate</a></b></p>
+            <button type="submit" disabled={this.state.logginIn} style={{'fontSize': '2rem'}}>{!this.state.logginIn ? 'Inicia Sesión' : 'Ingresando...'}</button>
+            <p className="message" style={{'fontSize': '1.6rem'}}>¿No tienes cuenta? <b><a href="#">Regístrate</a></b></p>
             <p className="message">Olvide mi contraseña <b><Link to="/recover-password">Recuperar contraseña</Link></b></p>
           </form>
         </div>

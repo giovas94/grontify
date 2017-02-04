@@ -5,6 +5,8 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import moment from 'moment';
 
+import { handleUserEmails } from '../../modules/handleUserEmails';
+
 import openpay from '../../startup/server/openpay-config';
 import Future from 'fibers/future';
 
@@ -76,7 +78,7 @@ export const createOrder = new ValidatedMethod({
     let orderDiscount = 0, shippingDiscount = 0;
 
     if (!this.userId) {
-      throw new Meteor.Error('not-authorized');
+      throw new Meteor.Error('not-authorized', 'Inicia sesión o regístrate para ver esta sección');
     }
 
     if (moment(shippingDate).diff(moment().startOf('day'), 'days') < 0) {
@@ -187,8 +189,37 @@ export const createOrder = new ValidatedMethod({
         }
       });
 
+      if (future.wait().order_id) {
+
+        Email.send({
+          from: "Grontify <contacto@grontify.com>",
+          to: handleUserEmails(Meteor.user()),
+          bcc: 'grontify@gmail.com',
+          subject: `Grontify | Confirmación de pedido ${orderId}`,
+          text: `Tu mandado ha sido creado!
+          \n\nEn breve recibirás un correo o whatsapp cuando tu pedido cambie de estatus a procesado.
+          \nTambién puedes checar los detalles y estatus de tu pedido en ${Meteor.absoluteUrl('order/'+orderId, {secure: true})}
+          \nTienes alguna duda, escríbenos a contacto@grontify.com o mándanos mensaje al whatsapp 55 3555-2173.
+          \n\nSaludos, \n -Grontify frutas y verduras a domicilio.`
+        });
+        
+      }
+
       return future.wait();
     } else {
+
+      Email.send({
+        from: "Grontify <contacto@grontify.com>",
+        to: handleUserEmails(Meteor.user()),
+        bcc: 'grontify@gmail.com',
+        subject: `Grontify | Confirmación de pedido ${orderId}`,
+        text: `Tu mandado ha sido creado!
+        \n\nEn breve recibirás un correo o whatsapp cuando tu pedido cambie de estatus a procesado.
+        \nTambién puedes checar los detalles y estatus de tu pedido en ${Meteor.absoluteUrl('order/'+orderId, {secure: true})}
+        \nTienes alguna duda, escríbenos a contacto@grontify.com o mándanos mensaje al whatsapp 55 3555-2173.
+        \n\nSaludos, \n -Grontify frutas y verduras a domicilio.`
+      });
+
       return { orderId };
     }
   }
@@ -232,5 +263,16 @@ export const cancelOrder = new ValidatedMethod({
     }
 
     Orders.update(orderId, { $set: { status: 'canceled' } });
+
+    Email.send({
+      from: "Grontify <contacto@grontify.com>",
+      to: handleUserEmails(Meteor.user()),
+      bcc: 'grontify@gmail.com',
+      subject: `Grontify | Cancelación de pedido ${orderId}`,
+      text: `Tu mandado ha sido cancelado.
+      \nPuedes checar el estatus de tu pedido en ${Meteor.absoluteUrl('order/'+orderId, {secure: true})}
+      \nTienes alguna duda, escríbenos a contacto@grontify.com o mándanos mensaje al whatsapp 55 3555-2173.
+      \n\nSaludos, \n -Grontify frutas y verduras a domicilio.`
+    });
   }
 });

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ListGroup, ListGroupItem } from 'react-bootstrap';
-import Loader from 'react-loaders';
+import {Loader} from 'react-loaders';
 
 export class List extends Component {
   render() {

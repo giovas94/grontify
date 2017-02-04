@@ -10,7 +10,7 @@ moment.locale('es');
 
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import Loader from 'react-loaders';
+import {Loader} from 'react-loaders';
 
 // var shippingTypeArr = [{value: 'express', label:'Express'}, {value: 'estandar', label:'Estándar'}, {value: 'programado', label:'Programado'}];
 
@@ -40,47 +40,55 @@ cards, addresses, createOrder}) => {
               <a href="#0" className="cd-item-remove cd-img-replace" onClick={() => removeOrderProduct(product)}>Remove</a>
             </li>
             ))}
-            <li>
-              <span>Tipo de envío <em style={{fontSize: 'small'}}>{shippingTypeName === 'Programado' ? 'Programa tu mandado'
-              : shippingTypeName === 'Express' ? moment().get('h') < 19 ? 'Recibe en 1hr o menos' : 'Recibe mañana antes de las 10:00hrs'
-              : shippingTypeName === 'Estándar' ? moment().get('h') < 16 ? 'Recibe hoy antes de las 20:00hrs' : 'Recibe mañana antes de las 14:00hrs' : '' }</em></span>
-              <Select options={renderShippingTypes()} value={shippingType} clearable={false} placeholder="Selecciona el tipo de envío"
-              onChange={value => handleShippingType(value.value)}  searchable={false} />
+            {!Meteor.userId() ?
+              <li>
+                <Link to="/login">Inicia sesión o regístrate para hacer tu mandado.</Link>
+              </li>
+            :
+            <div>
+              <li>
+                <span>Tipo de envío <em style={{fontSize: 'small'}}>{shippingTypeName === 'Programado' ? 'Programa tu mandado'
+                : shippingTypeName === 'Express' ? moment().get('h') < 19 ? 'Recibe en 1hr o menos' : 'Recibe mañana antes de las 10:00hrs'
+                : shippingTypeName === 'Estándar' ? moment().get('h') < 16 ? 'Recibe hoy antes de las 20:00hrs' : 'Recibe mañana antes de las 14:00hrs' : '' }</em></span>
+                <Select options={renderShippingTypes()} value={shippingType} clearable={false} placeholder="Selecciona el tipo de envío"
+                onChange={value => handleShippingType(value.value)}  searchable={false} />
 
-            </li>
-            {shippingTypeName === 'Programado' ?
-            <li>
-              <span>Elige fecha de entrega</span>
-              <DatePicker
-                dateFormat="DD/MM/YYYY" selected={shippingDate}
-                onChange={date => handleShippingDate(date)}
-                className="form-control"
-                minDate={moment().add(1, 'd')}
-              />
-              &nbsp;<em style={{fontSize: 'small'}}>Antes de las 17:00hrs</em>
-            </li>
-            :''}
-            <li>
-              <span>Método de pago</span>
-              {!cards.length ?
-                <div><Link to="/payment" state={{ fromOrder: true }}>Agregar método de pago</Link></div>
-              :
-                <Select isLoading={loadingCardsList} options={cards} value={paymentMethod} clearable={false}
-                onChange={value => handlePaymentMethod(value.value)} searchable={false} placeholder="Selecciona método de pago" />
-              }
-            </li>
-            <li>
-              <span>Dirección de entrega</span>
-              {!addresses ?
-                <div><Link to="/address-new" state={{ fromOrder: true }}>Agregar dirección de entrega</Link></div>
-              :
-                <Select options={_.map(addresses, function(address) {
-                  address.value = address['id'];
-                  address.label = `${address['street']} #${address['noExt']} ${address['noInt']} ${address['line1']} ${address['line2']} ${address['state']}`;
-                  return address;
-                })} value={shippingAddress} clearable={false} searchable={false} onChange={value => handleShippingAddress(value.value)} placeholder="Selecciona dirección de entrega" />
-              }
-            </li>
+              </li>
+              {shippingTypeName === 'Programado' ?
+              <li>
+                <span>Elige fecha de entrega</span>
+                <DatePicker
+                  dateFormat="DD/MM/YYYY" selected={shippingDate}
+                  onChange={date => handleShippingDate(date)}
+                  className="form-control"
+                  minDate={moment().add(1, 'd')}
+                />
+                &nbsp;<em style={{fontSize: 'small'}}>Antes de las 17:00hrs</em>
+              </li>
+              :''}
+              <li>
+                <span>Método de pago</span>
+                {!cards.length ?
+                  <div><Link to="/payment" state={{ fromOrder: true }}>Agregar método de pago</Link></div>
+                :
+                  <Select isLoading={loadingCardsList} options={cards} value={paymentMethod} clearable={false}
+                  onChange={value => handlePaymentMethod(value.value)} searchable={false} placeholder="Selecciona método de pago" />
+                }
+              </li>
+              <li>
+                <span>Dirección de entrega</span>
+                {!addresses ?
+                  <div><Link to="/address-new" state={{ fromOrder: true }}>Agregar dirección de entrega</Link></div>
+                :
+                  <Select options={_.map(addresses, function(address) {
+                    address.value = address['id'];
+                    address.label = `${address['street']} #${address['noExt']} ${address['noInt']} ${address['line1']} ${address['line2']} ${address['state']}`;
+                    return address;
+                  })} value={shippingAddress} clearable={false} searchable={false} onChange={value => handleShippingAddress(value.value)} placeholder="Selecciona dirección de entrega" />
+                }
+              </li>
+            </div>
+            }
           </ul>
         }
 

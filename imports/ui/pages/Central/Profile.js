@@ -7,7 +7,9 @@ import { Accounts } from 'meteor/accounts-base';
 import { Row, Col, FormGroup, FormControl, ControlLabel, HelpBlock, Button } from 'react-bootstrap';
 import { Tooltip, ButtonToolbar, OverlayTrigger } from 'react-bootstrap';
 
-import Loader from 'react-loaders';
+import { handleUserEmails } from '../../../modules/handleUserEmails';
+
+import {Loader} from 'react-loaders';
 
 export class Profile extends Component {
   constructor(props) {
@@ -129,7 +131,7 @@ export class Profile extends Component {
               <div className="profile">
                 <b>Nombre</b> {currentUser.profile.name} {!currentUser.emails ? '' : <b>Apellido(s)</b>} {currentUser.profile.last_name}
                 <br/>
-                <b>Email</b> {currentUser.emails ? currentUser.emails[0].address : 'Ingresaste con facebook'}
+                <b>Email</b> {!currentUser.emails ? 'Ingreso con facebook' : currentUser.emails[0].address}
                 <br/>
                 <b>Móvil</b>&nbsp;
                 {!this.state.editMode ?

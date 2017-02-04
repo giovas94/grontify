@@ -20,6 +20,10 @@ export const createOrder = new ValidatedMethod({
       type: String,
       regEx: SimpleSchema.RegEx.Email
     },
+    phone: {
+      type: String,
+      optional: true
+    },
     subject: {
       type: String
     },
@@ -27,8 +31,8 @@ export const createOrder = new ValidatedMethod({
       type: String
     }
   }).validator(),
-  run({name, email, subject, message}) {
-    const from = "Grontify <no-reply@meteorapp.com>";
+  run({name, email, phone, subject, message}) {
+    const from = "Grontify <contacto@grontify.com>";
 
     const messageID = ContactMessages.insert({
       name,
@@ -41,9 +45,11 @@ export const createOrder = new ValidatedMethod({
     Email.send({
       from,
       to: email,
+      bcc: 'grontify@gmail.com',
       subject: `Contacto con Grontify - ${subject}`,
       text: `Hola ${name}, \nRecibimos tu mensaje de contacto, en breve nos comunicaremos contigo.\n\n
       El folio de tu mensaje es: ${messageID}
+      \n\nTeléfono: ${phone}
       \n\nMensaje: ${message}.`
     });
   }

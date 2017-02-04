@@ -5,7 +5,7 @@ import { browserHistory } from 'react-router';
 import { Accounts } from 'meteor/accounts-base';
 
 import {List} from '../../components/Market/Addresses/List.js';
-import Loader from 'react-loaders';
+import {Loader} from 'react-loaders';
 
 export class Addresses extends Component {
   constructor(props) {

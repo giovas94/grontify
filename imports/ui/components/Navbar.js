@@ -33,14 +33,14 @@ export const Navbar = ({currentRoute, isLoginPage}) => (
 
   		<ul id="cd-navigation">
         <li><Link to="/" className={currentRoute[1].name === 'home' ? 'active' : ''}>Home</Link></li>
+        <li><Link to="/market" activeClassName="active"><i className="fa fa-shopping-basket" aria-hidden="true"></i> Mi Central</Link></li>
         <li><Link to="/how-works" activeClassName="active">Cómo funciona</Link></li>
         <li><Link to="/contact" activeClassName="active">Contáctanos</Link></li>
         <li><Link to="/service-area" activeClassName="active">Área de Servicio</Link></li>
-        <li><Link to="/market" activeClassName="active">Mi Central</Link></li>
         <li>{!Meteor.userId() ?
           <Link to="/login" activeClassName="active">Inicia Sesión / Regístrate</Link>
         :
-          <a href="#" onClick={handleLogout}>Salir</a>
+          <a href="#" onClick={handleLogout}><i className="fa fa-sign-out" aria-hidden="true"></i> Salir</a>
         }</li>
   		</ul>
   	</nav>

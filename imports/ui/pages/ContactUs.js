@@ -19,12 +19,13 @@ export class ContactUs extends Component {
     const { refs } = this;
     const name = refs.name.value;
     const email = refs.email.value;
+    const phone = refs.phone.value;
     const subject = refs.subject.value;
     const message = refs.message.value;
 
     this.setState({sending: !this.state.sending});
 
-    Meteor.call('contactMessages.insert', {name, email, subject, message}, (err) => {
+    Meteor.call('contactMessages.insert', {name, email, phone, subject, message}, (err) => {
       if (!err) {
         swal({
           title: "Mensaje enviado con éxito",
@@ -47,6 +48,7 @@ export class ContactUs extends Component {
 
       refs.name.value = '';
       refs.email.value = '';
+      refs.phone.value = '';
       refs.subject.value = '';
       refs.message.value = '';
     });
@@ -71,9 +73,10 @@ export class ContactUs extends Component {
               <div className="half left cf">
                 <input type="text" id="input-name" ref="name" placeholder="Nombre" required/>
                 <input type="email" id="input-email" ref="email" placeholder="Email" required/>
-                <input type="text" id="input-subject" ref="subject" placeholder="Asunto" required/>
+                <input type="text" id="input-phone" ref="phone" placeholder="Teléfono (Opcional)"/>
               </div>
               <div className="half right cf">
+                <input type="text" id="input-subject" ref="subject" placeholder="Asunto" required/>
                 <textarea name="message" id="input-message" ref="message" placeholder="Mensaje"></textarea>
               </div>
               <button type="submit" id="input-submit" className="btn btn-lg btn-block" disabled={this.state.sending}>{!this.state.sending ? 'Enviar mensaje' : 'Enviando...'}</button>

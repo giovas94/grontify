@@ -42,7 +42,7 @@ export const insertAddress = new ValidatedMethod({
   run({address}) {
     let myAddress = address;
     if (!this.userId) {
-      throw new Meteor.Error('not-authorized');
+      throw new Meteor.Error('not-authorized', 'Inicia sesión o regístrate para ver esta sección');
     }
 
     _.assign(myAddress, {id: Random.id()});

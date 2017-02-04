@@ -71,7 +71,7 @@ export const insertPaymentMethod = new ValidatedMethod({
     var listFut = new Future();
 
     if (!this.userId) {
-      throw new Meteor.Error('not-authorized');
+      throw new Meteor.Error('not-authorized', 'Inicia sesión o regístrate para ver esta sección');
     }
 
     const openpayId = Meteor.users.find({_id: this.userId}, {fields: { openpay_id: 1 }}).fetch()[0].openpay_id;
@@ -141,7 +141,7 @@ Meteor.methods({
     var future = new Future();
 
     if (!this.userId) {
-      throw new Meteor.Error('not-authorized');
+      throw new Meteor.Error('not-authorized', 'Inicia sesión o regístrate para ver esta sección');
     }
 
     const openpayId = Meteor.users.find({_id: this.userId}, {fields: { openpay_id: 1 }}).fetch()[0].openpay_id;

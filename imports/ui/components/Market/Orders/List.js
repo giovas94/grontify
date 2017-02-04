@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {Table, Alert} from 'react-bootstrap';
 import { Link } from 'react-router';
 
+import { handleStatusLabel, handleStatusColor } from '../../../../modules/orderStatusLabels';
+
 export class List extends Component {
   _handleCancel(orderId) {
     swal({
@@ -28,34 +30,6 @@ export class List extends Component {
         swal("Seguimos!", "Tu mandado llegará pronto", "error");
       }
     });
-  }
-
-  _handleStatusLabel(status) {
-    if (status === 'processed') {
-      return 'Procesado'
-    } else if (status === 'canceled') {
-      return 'Cancelado'
-    } else if (status === 'sent') {
-      return 'Enviado'
-    } else if (status === 'created') {
-      return 'Creado'
-    } {
-      return 'Entregado'
-    }
-  }
-
-  _handleStatusColor(status) {
-    if (status === 'processed') {
-      return {}
-    } else if (status === 'canceled') {
-      return {color: '#e53935'}
-    } else if (status === 'sent') {
-      return {color: '#ffb300'}
-    } else if (status === 'created') {
-      return {color: '#1e88e5'}
-    } {
-      return {color: '#7cb342'}
-    }
   }
 
   render() {
@@ -87,7 +61,7 @@ export class List extends Component {
                     <td>{accounting.formatMoney(order.orderDiscount + order.shippingDiscount)}</td>
                     <td>{`${order.shippingType}(${accounting.formatMoney(order.shippingCost)})`}</td>
                     <td>{accounting.formatMoney(order.total)}</td>
-                    <td style={this._handleStatusColor(order.status)}>{this._handleStatusLabel(order.status)}</td>
+                    <td style={handleStatusColor(order.status)}>{handleStatusLabel(order.status)}</td>
                     <td><Link to={`/order/${order._id}`}>Detalle</Link> | {order.status === 'sent' || order.status === 'delivered' || order.status === 'canceled' ? '' : <a href="#" onClick={this._handleCancel.bind(this, order._id)}>Cancelar</a> }</td>
                   </tr>
                 ))}

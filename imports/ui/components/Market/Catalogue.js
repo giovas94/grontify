@@ -4,11 +4,11 @@ import { Link } from 'react-router';
 import { Meteor } from 'meteor/meteor';
 import { browserHistory } from 'react-router';
 import { Accounts } from 'meteor/accounts-base';
-import {Row, Col, FormGroup, FormControl, ControlLabel, Button} from 'react-bootstrap';
+import {Row, Col, FormGroup, FormControl, ControlLabel, Button, PanelGroup, Panel} from 'react-bootstrap';
 import moment from 'moment';
 
 import NumericInput from 'react-numeric-input';
-import Loader from 'react-loaders';
+import {Loader} from 'react-loaders';
 
 import 'moment/locale/es.js';
 moment.locale('es');
@@ -24,7 +24,7 @@ export class Catalogue extends Component {
 
     this.state= {
       catalogue,
-      currentOrder: this.props.currentOrder,
+      currentOrder: this.props.currentOrder ? this.props.currentOrder : JSON.parse(localStorage.getItem('currentOrder-null')),
       shippingType: null, //ID
       shippingCost: null, //Price
       shippingTypeName: null, //Name
@@ -165,6 +165,9 @@ export class Catalogue extends Component {
     _.pullAt(myOrder, productIndex);
 
     localStorage.setItem(`currentOrder-${Meteor.userId()}`, JSON.stringify(myOrder));
+    if (Meteor.userId()) {
+        localStorage.setItem(`currentOrder-null`, JSON.stringify(myOrder));
+    }
     this.setState({currentOrder: myOrder});
 
     if (!myOrder.length) {
@@ -242,6 +245,7 @@ export class Catalogue extends Component {
           Meteor.call('orders.remove', {orderId: result.orderId});
         } else {
           localStorage.setItem(`currentOrder-${Meteor.userId()}`, JSON.stringify([]))
+          localStorage.setItem(`currentOrder-null`, JSON.stringify([]))
           this.setState({currentOrder: []});
           Alert.success('<h4>Excelente, orden generada!</h4>', {
             position: 'top-right',
@@ -297,9 +301,21 @@ export class Catalogue extends Component {
           createOrder={this._createOrder.bind(this)}/>
         <h2>Catálogo</h2>
         <Row>
-          <Col sm={12}>
+          <Col sm={12} md={6}>
+            <PanelGroup accordion>
+              <Panel header={<strong style={{cursor: 'pointer'}}>Información</strong>} bsStyle="info" style={{fontSize: '1.2rem'}} eventKey="1">
+                El precio de los productos es aproximado, el total real de tu mandado te será notificado a la entrega y mediante email o whatsapp.<br/>
+                El precio puede variar entre 3% y 7% hacia abajo o hacia arriba dependiendo los precios del día en la central de abastos.
+              </Panel>
+            </PanelGroup>
+            {/* <Panel header={"Información"} bsStyle="info" style={{fontSize: '1rem'}}>
+              El precio de los productos es aproximado, el total real de tu mandado te será notificado a la entrega y mediante email o whatsapp.<br/>
+              El precio puede variar entre 3% y 7% hacia abajo o hacia arriba dependiendo los precios del día en la central de abastos.
+            </Panel> */}
+          </Col>
+          <Col sm={12} md={6}>
             <FormGroup>
-              <FormControl bsSize="large" placeholder="Buscar" type="text" ref="search"
+              <FormControl bsSize="large" placeholder="Buscar producto" type="text" ref="search"
                 onChange={(e) => { this.props.searchQuery.set(e.target.value) }}/>
             </FormGroup>
           </Col>
@@ -324,7 +340,7 @@ export class Catalogue extends Component {
           }
           </Col>
         </Row>
-
+        <br/>
         <div id="cd-shadow-layer"></div>
 
       </div>
